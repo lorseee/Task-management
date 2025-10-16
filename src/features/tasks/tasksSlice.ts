@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import api from "../../api/axios";
 
 export interface Task {
   id: string;
@@ -16,62 +15,44 @@ interface TasksState {
 }
 
 const initialState: TasksState = {
-  tasks: [],
+  tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
   loading: false,
   error: null,
 };
 
-// Fetch all tasks
-export const fetchTasks = createAsyncThunk(
-  "tasks/fetchTasks",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get("/tasks");
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch tasks");
-    }
-  }
-);
+// Fetch all tasks (mocked)
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
+  await new Promise((res) => setTimeout(res, 300));
+  return JSON.parse(localStorage.getItem("tasks") || "[]");
+});
 
-// Add new task
+// Add new task (mocked)
 export const addTask = createAsyncThunk(
   "tasks/addTask",
-  async (task: Omit<Task, "id">, { rejectWithValue }) => {
-    try {
-      const response = await api.post("/tasks", task);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to add task");
-    }
+  async (task: Omit<Task, "id">) => {
+    const newTask: Task = { id: Date.now().toString(), ...task };
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    const updated = [newTask, ...tasks];
+    localStorage.setItem("tasks", JSON.stringify(updated));
+    return newTask;
   }
 );
 
-// Update task
-export const updateTask = createAsyncThunk(
-  "tasks/updateTask",
-  async (task: Task, { rejectWithValue }) => {
-    try {
-      const response = await api.put(`/tasks/${task.id}`, task);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update task");
-    }
-  }
-);
+// Update task (mocked)
+export const updateTask = createAsyncThunk("tasks/updateTask", async (task: Task) => {
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  const updated = tasks.map((t: Task) => (t.id === task.id ? task : t));
+  localStorage.setItem("tasks", JSON.stringify(updated));
+  return task;
+});
 
-// Delete task
-export const deleteTask = createAsyncThunk(
-  "tasks/deleteTask",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      await api.delete(`/tasks/${id}`);
-      return id;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to delete task");
-    }
-  }
-);
+// Delete task (mocked)
+export const deleteTask = createAsyncThunk("tasks/deleteTask", async (id: string) => {
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  const updated = tasks.filter((t: Task) => t.id !== id);
+  localStorage.setItem("tasks", JSON.stringify(updated));
+  return id;
+});
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -93,7 +74,7 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || "Failed to fetch tasks";
       })
       .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
         state.tasks.unshift(action.payload);

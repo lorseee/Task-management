@@ -1,6 +1,5 @@
 // src/features/auth/authSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../api/axios";
 
 interface User {
   name: string;
@@ -25,11 +24,22 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials: { username: string; password: string }, { rejectWithValue }) => {
-    try {
-      const response = await api.post("/login", credentials);
-      return response.data;
-    } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Login failed");
+    const { username, password } = credentials;
+
+    // 🧠 Simulate API delay
+    await new Promise((res) => setTimeout(res, 800));
+
+    // ✅ Simple mock logic
+    if (username === "test" && password === "test123") {
+      const mockResponse = {
+        user: { name: "Test User", email: "test@example.com" },
+        token: "mock-jwt-token-123",
+      };
+      localStorage.setItem("token", mockResponse.token);
+      localStorage.setItem("user", JSON.stringify(mockResponse.user));
+      return mockResponse;
+    } else {
+      return rejectWithValue("Invalid username or password");
     }
   }
 );
