@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+ Task Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple Task Manager frontend built with React,TypeScript, Ant Design, and Redux Toolkit. It includes a mocked authentication flow for local development.
 
-Currently, two official plugins are available:
+**
+To start:
+Make sure you have the following installed:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js
+- npm or yarn
+- Git
+create project 
+install dependencies
+and to run locally npm start 
+The app will run at a local server.
+**
 
-## React Compiler
+**
+The project does not connect to a real backend. All API requests are mocked for development purposes.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Styling is based on Tailwind CSS and Ant Design.
 
-## Expanding the ESLint configuration
+The layout includes a centered header and Logout button on the right.
+**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Authentication System : Mock login/logout with JWT-style token management
+- Task Management: Full CRUD operations for tasks
+- Status Tracking: Track tasks as To Do, In Progress, or Completed
+- Modern UI: Clean, responsive design with Tailwind CSS
+-State Management: Redux Toolkit for predictable state updates
+- Mocked API: Mock Service Worker for simulating backend responses
+- Protected Routes: Authentication-based route protection
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Technologies utilized:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- React(v18) - UI library
+- TypeScript - Type safety
+- Redux Toolkit - State management
+- React Router - Client-side routing
+- Mock Service Worker - API mocking
+- Axios - HTTP client
+- Tailwind CSS - Styling
+- Shadcn UI - Component library
+- Vite - Build tool
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+File Structure 
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+├── src/
+│   ├── api/
+│   │   └── axios.ts             # Axios instance (TS)
+│   ├── app/
+│   │   └── store.ts             # Redux store (TS)
+│   ├── components/
+│   │   ├── Layout.tsx           # Layout (TSX)
+│   │   └── ProtectedRoute.tsx   # Route protection (TSX)
+│   ├── features/
+│   │   ├── auth/
+│   │   │   ├── authSlice.ts     # Auth state (TS)
+│   │   │   └── Login.tsx        # Login page (TSX)
+│   │   └── tasks/
+│   │   │   ├── tasksSlice.ts    # Tasks state (TS)
+│   │   │   ├── TaskForm.tsx     # Task form (TSX)
+│   │   │   └── TaskList.tsx     # Task list (TSX)
+│   ├── hooks/                     # New directory
+│   │     
+│   ├── mocks/
+│   │   ├── browser.ts           # MSW config (TS)
+│   │   ├── handlers.ts          # API mock handlers (TS)
+│   │   └── tasks.ts             # Tasks mock data (TS)
+│   ├── pages/
+│   │   └── Dashboard.tsx        # Dashboard page (TSX)
+│   ├── styles/
+│   │   └── index.css            # Global CSS styles
+│   ├── App.tsx                  # App component (TSX)
+│   ├── main.tsx                 # Entry point (TSX)
+│   └── types.ts                 # TypeScript type definitions
+└── package.json
